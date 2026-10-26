@@ -1,0 +1,37 @@
+
+name: Prediction Testing Automation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  prediction-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pull Code from GitHub
+        uses: actions/checkout@v4
+
+      - name: Set Up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Train Model
+        run: python src/train.py
+
+      - name: Test Prediction
+        run: python -m pytest tests/test_prediction.py -v -s
+
+      - name: Display Success
+        run: echo "Prediction Testing Completed Successfully"
+
